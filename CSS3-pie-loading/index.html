@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CSS3饼状loading效果</title>
+	<meta charset="utf-8">
+	<style type="text/css">
+		.loadingC{
+			width: 50px;
+			height: 50px;
+
+			position: fixed;
+			top: 50%;
+			left: 50%;
+			margin-left: -25px;
+			margin-top: -25px;
+		}
+		.rotateCircles, .rotateCircles > div{
+			height: 100%;
+		}
+		
+
+		/*半圆绘制*/
+		.rotateCircles .leftSemicircle{
+			width: 25px; 
+			height: 50px;
+			-moz-border-radius: 50px 0 0 50px; 
+			-webkit-border-radius: 50px 0 0 50px; 
+			border-radius: 50px 0 0 50px;
+			position: absolute;
+		    top: 0;
+		    left: 0;
+		    transform-origin: right;
+		}
+		.rotateCircles .rightSemicircle{
+			width: 25px; 
+			height: 50px;
+			-moz-border-radius: 0 50px 50px 0; 
+			-webkit-border-radius: 0 50px 50px 0; 
+			border-radius: 0 50px 50px 0;
+			position: absolute;
+			left: 50%;
+		    top: 0;
+		    transform-origin: left;
+		}
+
+		/*圆1左半圆，圆2右半圆同色*/
+		.circle1 .leftSemicircle, .circle2 .rightSemicircle{
+			background-color: #FB8BBC;
+		}
+
+		/*圆2左半圆，圆1右半圆同色*/
+		.circle2 .leftSemicircle, .circle1 .rightSemicircle{
+			background:  #FF298C; 
+		}
+
+		/*圆1左扇形*/
+		.circle1 .leftSemicircle{
+			z-index: 100;
+			transform: rotate(360deg);
+			animation: rotate1 1.2s linear infinite;
+		}
+		/*圆1右扇形*/
+		.circle1 .rightSemicircle{
+			z-index: 10;
+			transform: rotate(360deg);
+			animation: rotate2 1.2s linear infinite;
+		}
+
+		/*圆2左扇形*/
+		.circle2 .leftSemicircle{
+			z-index: 10;
+			transform: rotate(360deg);
+			animation: rotate3 1.2s linear infinite;
+		}
+		/*圆2右扇形*/
+		.circle2 .rightSemicircle{
+			z-index: 100;
+			transform: rotate(360deg);
+			animation: rotate4 1.2s linear infinite;
+		}
+
+		.arcContainer{
+		    width: 80px;
+		    height: 68px;
+		    overflow: hidden;
+		    position: absolute;
+		    left: -15px;
+		    top: -3px;
+		    transform: rotate(360deg);
+		    animation: arcRotate 1s linear infinite;
+		    transform-origin: center 28px;
+		}
+		.arcContainer .arc{
+		    display: block;
+		    width: 80px;
+		    height: 80px;
+		    margin-top: -12px;
+		    box-sizing: border-box;
+		    border: 2px solid #FF298C;
+		    border-radius: 0 40px 40px 40px;
+		    transform: rotate(45deg);
+		}
+		@keyframes rotate1{
+			0%{
+				z-index: 60;
+				transform: rotate(360deg);
+			}
+
+			24%{
+				z-index: 60;
+			}
+
+			25%{
+				z-index: 10;
+				transform: rotate(180deg);
+			}
+			50%{
+				z-index: 10;
+				transform: rotate(180deg);
+			}
+
+			51%{
+				z-index: 60;
+			}
+			74%{
+				z-index: 60;
+			}
+
+			75%{
+				z-index: 100;
+				transform: rotate(0deg);
+			}
+			100%{
+				z-index: 100;
+				transform: rotate(0deg);
+			}
+		}
+		@keyframes rotate2{
+			0%{
+				z-index: 60;
+				transform: rotate(360deg);
+				
+			}
+			24%{
+				z-index: 60;
+			}
+
+			25%{
+				z-index: 100;
+				transform: rotate(180deg);
+			}
+
+			50%{
+				z-index: 100;
+				transform: rotate(180deg);
+			}
+
+			51%{
+				z-index: 60;
+			}
+			74%{
+				z-index: 60;
+			}
+
+			75%{
+				z-index: 0;
+				transform: rotate(0deg);
+			}
+			100%{
+				z-index: 0;
+				transform: rotate(0deg);
+			}
+		}
+		@keyframes rotate3{
+			0%{
+				z-index: 10;
+				transform: rotate(360deg);	
+			}
+			25%{
+				z-index: 10;
+				transform: rotate(360deg);	
+			}
+			26%{
+				z-index: 60;
+			}
+			49%{
+				z-index: 60;
+			}
+			50%{
+				z-index: 100;
+				transform: rotate(180deg);
+			}
+			75%{
+				z-index: 100;
+				transform: rotate(180deg);
+			}
+			76%{
+				z-index: 60;
+			}
+			99%{
+				z-index: 60;
+			}
+			100%{
+				z-index: 0;
+				transform: rotate(0deg);
+			}
+		}
+		@keyframes rotate4{
+			0%{
+				z-index: 100;
+				transform: rotate(360deg);	
+			}
+			25%{
+				z-index: 100;
+				transform: rotate(360deg);	
+			}
+			26%{
+				z-index: 60;
+			}
+			49%{
+				z-index: 60;
+			}
+			50%{
+				z-index: 0;
+				transform: rotate(180deg);
+			}
+			75%{
+				z-index: 0;
+				transform: rotate(180deg);
+			}
+			76%{
+				z-index: 60;
+			}
+			99%{
+				z-index: 60;
+			}
+			100%{
+				z-index: 100;
+				transform: rotate(0deg);
+			}
+		}
+		@keyframes arcRotate{
+			form{
+				transform: rotate(360deg);
+			}
+			to{
+				transform: rotate(0deg);
+			}
+		}
+	</style>
+</head>
+<body>
+	<div class="loadingC">
+		<div class="rotateCircles">
+			<div class="circle1">
+				<i class="leftSemicircle"></i>
+				<i class="rightSemicircle"></i>
+			</div>
+			<div class="circle2">
+				<i class="rightSemicircle"></i>
+				<i class="leftSemicircle"></i>
+			</div>
+		</div>
+		<div class="arcContainer">
+			<i class="arc"></i>
+		</div>
+	</div>
+</body>
+</html>
