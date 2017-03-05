@@ -3,12 +3,9 @@ import {TypeCheckUtil} from './utils.js'
 
 //文件操作模块(尝试返回一个promise对象)
 /*
-	
 	输入: 文件输入DOM(可以是一个容器，或者是一个按钮，容器作为拖拽输入，按钮作为点击输入，两个都给就两个都监听){Object.dragTarget/selectBtn}, 文件类型限制{String}"type1|type2"，文件类型错误回调{Function}, 文件打开成功回调
-
 	
 	从传入的文件输入DOM触发文件输入，用户选择文件或拖入文件，类型错误，调用回调，打开错误或者浏览器不支持，reject。
-
  */
 
 var inParams = {},
@@ -38,8 +35,14 @@ function _initDragHandle(dragTarget) {
 			inParams.errorCallback("浏览器不支持");
 			return;
 		}
+
 		var files = [...dt.files];
 
+		//未输入或输入的不是文件，DOM
+		if (files.length === 0) {
+			return;
+		}
+		
 		_fileFilter(files);
 		
 		if (files.length === 0) {
@@ -55,7 +58,7 @@ function _initButtonInHandle(selectBtn) {
 		fileInput = document.createElement("input");
 	var input = fileInput;
 	input.type = "file";
-	input.style.display = "hidden";
+	input.style.display = "none";
 	document.body.appendChild(input);
 	selectBtn.addEventListener("click", event => (input.click()));
 	input.addEventListener("change", function (event) {

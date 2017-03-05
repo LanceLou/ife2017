@@ -67,6 +67,7 @@ class ElementMouseMove{
 	 *
 	 */
 	[_triggerMoveListener](curPos) {
+		console.log(curPos);
 		this.moveCallbackList.map((item) => item.callback.apply(item.context));
 	}
 

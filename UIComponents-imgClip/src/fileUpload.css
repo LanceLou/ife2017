@@ -1,0 +1,101 @@
+.UPC-uploadStateContainer-hidden{
+	display: none;
+}
+#UPC-uploadStateContainer{
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	z-index: 100;
+}
+#UPC-uploadStateContainer .mask{
+	width: 100%;
+	height: 100%;
+	background-color: #F1CF26;
+	opacity: 0.8;
+	filter: opacity(80%);
+	z-index: 200;
+}
+#UPC-uploadStateContainer .stateProgress{
+	width: 50%;
+	height: 100px;
+	background-color: #fff;
+	position: absolute;
+	left: 50%;
+	margin-left: -25%;
+	top: 40%;
+	margin-top: -50px;
+	border-radius: 50px;
+	animation: UPC-progressShowAnimate 1s linear;
+	z-index: 210;
+}
+#UPC-uploadStateContainer .stateProgress .progressWrapper{
+	display: none;
+    height: 12px;
+    width: 90%;
+    background-color: #ccc;
+    position: absolute;
+    top: 50%;
+    margin-top: -6px;
+    left: 50%;
+    margin-left: -45%;
+    border-radius: 6px;
+    overflow: hidden;
+}
+#UPC-uploadStateContainer .stateProgress .progressBar{
+	width: 40%;
+    height: 100%;
+    background-color: #21C5FE;
+    position: absolute;
+    border-radius: 6px;
+}
+#UPC-uploadStateContainer .showProgress a, #UPC-uploadStateContainer .showProgress p{
+	display: none;
+}
+#UPC-uploadStateContainer .showProgress .progressWrapper{
+	display: block;
+}
+#UPC-uploadStateContainer .showProgress .progressBar{
+	animation: UPC-leftToRightAnimate 1.5s linear infinite;
+}
+
+#UPC-uploadStateContainer .showUploadResult a{
+	display: inline-block;
+    padding: 10px 5px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: #21C5FE;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 6px;
+}
+#UPC-uploadStateContainer .showUploadResult a:first-of-type{
+	left: 20px;
+}
+#UPC-uploadStateContainer .showUploadResult a:last-of-type{
+	right: 20px;
+}
+#UPC-uploadStateContainer .showUploadResult p{
+	text-align: center;
+	color: red;
+}
+@keyframes UPC-leftToRightAnimate{
+	0%{
+		left: -100%;
+	}
+	100%{
+		left: 100%;
+	}
+}
+@keyframes UPC-progressShowAnimate{
+	0%{
+		opacity: 0;
+		filter: opacity(0);
+	}
+	100%{
+		opacity: 1;
+		filter: opacity(100%);
+	}
+}

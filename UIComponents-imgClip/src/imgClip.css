@@ -31,7 +31,7 @@ a.la-btn{
 }
 
 #lance-imgClip-operateArea .oriImg .mask{
-	background-color: rgba(0, 0, 0, 0.3);
+	background-color: rgba(0, 0, 0, 0.5);
 	width: 100%;
 	height: 100%;
     z-index: 10;
@@ -39,17 +39,18 @@ a.la-btn{
 }
 
 #lance-imgClip-operateArea .oriImg .img{
-    background-image: url(./imgs/test.png);
     background-repeat: no-repeat;
     background-position: 0 0;
     position: absolute;
 
 	/*set by script from img*/
+	/*
+	background-image: url(./src/imgs/test.png);
 	left: 166px;
     top: 0;
-
-	width: 640px;
-	height: 1136px;
+    */
+	width: 0;
+	height: 0;
 }
 
 #lance-imgClip-operateArea .oriImg .clipUtil{
@@ -68,16 +69,17 @@ a.la-btn{
 	height: 10px;
 	position: absolute;
 	background-color: #21C5FE;
+	z-index: 102;
 }
 
-#lance-imgClip-operateArea .oriImg .clipUtil span.lt{top: -5px; left: -5px; cursor: nwse-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.mt{top: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.rt{top: -5px; right: -5px; cursor: nesw-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.lm{left: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.rm{right: -5px; top: 50%; transform: translateY(-50%); cursor: ew-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.lb{bottom: -5px; left: -5px; cursor: nesw-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.mb{bottom: -5px; left: 50%; transform: translateX(-50%); cursor: ns-resize;}
-#lance-imgClip-operateArea .oriImg .clipUtil span.rb{bottom: -5px; right: -5px; cursor: nwse-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.lt{top: 0px; left: 0px; cursor: nwse-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.mt{top: 0px; left: 50%; transform: translateX(-50%); cursor: ns-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.rt{top: 0px; right: 0px; cursor: nesw-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.lm{left: 0px; top: 50%; transform: translateY(-50%); cursor: ew-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.rm{right: 0px; top: 50%; transform: translateY(-50%); cursor: ew-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.lb{bottom: 0px; left: 0px; cursor: nesw-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.mb{bottom: 0px; left: 50%; transform: translateX(-50%); cursor: ns-resize;}
+#lance-imgClip-operateArea .oriImg .clipUtil span.rb{bottom: 0px; right: 0px; cursor: nwse-resize;}
 
 #lance-imgClip-operateArea .oriImg .clipUtil > i{
 	display: block;
@@ -132,14 +134,23 @@ a.la-btn{
 	border-radius: 2px;
 	outline: none;
 }
+#lance-imgClip-operateArea .paramArea h3{
+	padding-left: 10px;
+    margin: 30px 0 10px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #ccc;
+}
 #lance-imgClip-operateArea .remender{
-    padding: 10px 20px;
-    padding-top: 3rem;
+	display: block;
+    border: 1px dashed #000;
+    margin: 10px 5px;
+    padding: 50px 10px;
     color: #FB8BBC;
 }
 
 #lance-imgClip-resultShowArea .show-header{
-	margin-top: 3rem;
+    margin-top: 3rem;
+    margin-bottom: 1rem;
 }
 #lance-imgClip-resultShowArea .show-header > *{
     display: inline-block;
