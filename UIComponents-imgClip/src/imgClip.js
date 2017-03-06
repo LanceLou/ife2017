@@ -52,6 +52,10 @@ class ImgClipUtil {
 
 	} 
 
+	/**
+	 * setclipTargetImage: 设置图片剪切被处理的对象，当有新图片被输入的时候设置
+	 * @param  {Node} clipTaregt 图片容器对象(背景)
+	 */
 	setclipTaregtImage(clipTaregt) {
 		this.clipTaregt = clipTaregt;
 
@@ -64,6 +68,10 @@ class ImgClipUtil {
 		this.draw();
 	}
 
+	/**
+	 * init: 初始化图片剪切，当有图片输入的时候，建议设置剪切对象(clipTarget)之后再调用
+	 * @param  {Node} clipTaregt 剪切对象Node
+	 */
 	init(clipTaregt) {
 		clipTaregt?this.setclipTaregtImage(clipTaregt):null;
 		if (!this[_isInit]) {
@@ -72,6 +80,11 @@ class ImgClipUtil {
 		}
 	}
 
+	/**
+	 * 绘制八向剪切框是调用，绘制其内容
+	 * @param  {[type]} error [description]
+	 * @return {[type]}       [description]
+	 */
 	draw(error) {
 		var drawParams = this[_getClipUtilDramParams]();
 		if (drawParams) {
@@ -82,6 +95,13 @@ class ImgClipUtil {
 		}
 	}
 
+	/**
+	 * updateClipParamAndDraw: 给出参数，更新剪切工具
+	 * @param  {Number} toWidth  宽度
+	 * @param  {Number} toHeight 高度
+	 * @param  {Number} toTop    定位Top
+	 * @param  {Number} toLeft   定位Left
+	 */
 	updateClipParamAndDraw(toWidth, toHeight, toTop, toLeft) {
 		this.clipUtil.style.left = toLeft ? toLeft + "px" : undefined;
 		this.clipUtil.style.top = toTop ? toTop + "px" : undefined;
@@ -93,6 +113,11 @@ class ImgClipUtil {
 		this.draw();
 	}
 
+	/**
+	 * addClipUtilAdjustListener: 添加剪切调节回调函数
+	 * @param {Function} callback 回调函数，届时将传入当前剪切工具的长宽，定位属性(top,left)
+	 * @param {Object}   context  执行环境
+	 */
 	addClipUtilAdjustListener(callback, context) {
 		this[_adjustListenerCallback].push({callback: callback, context: context});
 	}
@@ -105,6 +130,12 @@ class ImgClipUtil {
 		this.canvas.toBlob(callback);
 	}
 
+	/**
+	 * 剪切工具拖动放大移动计算
+	 * @param {String} direction 拖动方向，即拖的哪个点	
+	 * @param {Object}   startPos  鼠标起始拖动位置
+	 * @param {Object}   endPos  鼠标结束拖动位置
+	 */
 	[_mouseDragMoveHandler](direction, startPos, endPos) {
 		var toWidth = this.canvas.width,
 			toHeight = this.canvas.height,
@@ -155,6 +186,9 @@ class ImgClipUtil {
 		this[_triggerAllClipUtilAdjustListener]({top: toTop, left: toLeft, width: toWidth, height: toHeight});
 	}
 
+	/**
+	 * 触发所有剪切工具Rect改变监听
+	 */
 	[_triggerAllClipUtilAdjustListener](pos) {
 		this[_adjustListenerCallback].map(item => item.callback.call(item.context, pos));
 	}
@@ -195,6 +229,10 @@ class ImgClipUtil {
 	}
 
 	
+	/**
+	 * 根据clipTarget与剪切工具的相对位置，长宽计算出剪切工具绘制其实坐标，长宽，剪切对象起始坐标
+	 * @return {Object} {cx，cy: 画布起始坐标 | width, hright: 绘制长宽，即两矩形重合区域 | ix, iy: 图片起始坐标，从图片的那个位置开始切}
+	 */
 	[_getClipUtilDramParams]() {
 		var clipTaregtRect = this.clipTaregt.getBoundingClientRect(),
 			utilRect = this[_clipUtilRect],
@@ -270,6 +308,9 @@ class ImgClipUtil {
 		}
 	}
 
+	/**
+	 * 最终绘制函数
+	 */
 	[_drawClipResult]({cx, cy, ix, iy, width, height}) {
 		this.canvasCtx.save();
 		this.canvasCtx.clearRect(0, 0, this[_clipUtilRect].width, this[_clipUtilRect].height);

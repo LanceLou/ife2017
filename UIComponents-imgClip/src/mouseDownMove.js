@@ -120,7 +120,9 @@ class ElementMouseMove{
 			if (!self.isMoveDown) return;
 			var delta = self[_getMouseDeltaXY]({x: event.clientX, y: event.clientY});
 
+			//2px为一个移动单位，"节流"
 			if (Math.abs(delta.x) <= 2 && Math.abs(delta.y) <= 2) return;
+
 			// console.log(delta);
 			self[_moveTheTarget](delta);
 
