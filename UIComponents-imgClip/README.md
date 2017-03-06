@@ -60,6 +60,7 @@ creates a DOMString containing an URL representing the object given in parameter
 2. 老生常谈，兼容性问题，canvas的话去找个polyfill应该差不多，其他ajax的formdata的话做个iframe装个表单提交？社区里面有说flash，这方面作者也不是特别擅长，还请各位多多指教。
 3. 组件方面这一版涉及的不多，分工不够明确，可能还有许多的耦合。
 4. 当然，可能还有一些bug，也欢迎各位讨论。
+5. 图片剪切结果展示还在做，各位剪切的图片暂时有作者我收下啦。
 
 以上作者将独立出一个分支开发2.0版本，也期待各位的加入。
 
