@@ -51,7 +51,7 @@ function showUploadResult(isSuc){
 /**
  * insertDom: 插入相关Dom，显示上传进度，上传结果等
  */
-function insertDom() {
+function insertDom(options) {
 	var container = document.createElement("div");
 	container.id = "UPC-uploadStateContainer";
 	container.className = "UPC-uploadStateContainer-hidden";
@@ -63,7 +63,7 @@ function insertDom() {
 		'		</div>'+
 		'		<a href="javascript: void(0)" id="UPC-btn-reOperate">继续操作</a>'+
 		'		<p id="UPC-remainder-p">上传成功</p>'+
-		'	<a href="http://www.baidu.com" id="UPC-btn-forward">前往imgClipedList.com</a>'+
+		'	<a href="'+options.forwardUrl+'" id="UPC-btn-forward">前往imgClipedList.com</a>'+
 		'</div>';
 	progressWrapperCDom = container.querySelector(".stateProgress");
 	forwardDom = container.querySelector("#UPC-btn-forward");
@@ -103,12 +103,12 @@ function uploadFile(data, url, callback, options) {
 		var value = data[name];
 
 		if (typeof value === "function") continue;
-		formdata.append("upload", value);
+		formdata.append(name, value);
 	}
 
 	request.send(formdata);
 	if (!containerDom) 
-		insertDom();
+		insertDom(options);
 	showUploadProgressAnimate();
 }
 

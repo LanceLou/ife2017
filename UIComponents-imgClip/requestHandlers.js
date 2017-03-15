@@ -1,54 +1,48 @@
-// var exec = require("child_process").exec;
-//  function start(response) {
-//    console.log("Request handler 'start' was called.");
-//    exec("ls -lah", function (error, stdout, stderr) {
-//      response.writeHead(200, {"Content-Type": "text/plain"});
-//      response.write(stdout);
-//      response.end();
-// }); }
-//  function upload(response) {
-//    console.log("Request handler 'upload' was called.");
-//    response.writeHead(200, {"Content-Type": "text/plain"});
-//    response.write("Hello Upload");
-//    response.end();
-// }
-//  exports.start = start;
-//  exports.upload = upload;
-
-
-// var querystring = require("querystring");
-// function start(response, postData) {
-//   console.log("Request handler 'start' was called.");
-//   var body = '<html>'+
-//     '<head>'+
-//     '<meta http-equiv="Content-Type" content="text/html; '+
-//     'charset=UTF-8" />'+
-//     '</head>'+
-//     '<body>'+
-//     '<form action="/upload" method="post">'+
-//     '<textarea name="text" rows="20" cols="60"></textarea>'+
-//     '<input type="submit" value="Submit text" />'+
-//     '</form>'+
-//     '</body>'+
-//     '</html>';
-//     response.writeHead(200, {"Content-Type": "text/html"});
-//     response.write(body);
-//     response.end();
-// }
-// function upload(response, postData) {
-//   console.log("Request handler 'upload' was called.");
-//   response.writeHead(200, {"Content-Type": "text/plain"});
-//   response.write("You've sent the text: "+
-//   querystring.parse(postData).text);
-//   console.log(postData);
-//   response.end();
-// }
-// exports.start = start;
-// exports.upload = upload;
-
 var querystring = require("querystring"),
     fs = require("fs"),
+    mongoose = require('mongoose'),
     formidable = require("formidable");
+
+mongoose.connect('mongodb://localhost/imgClipDb');
+
+var Image = mongoose.model('Image', {
+  url: String,
+  width: Number,
+  height: Number
+});
+
+function insertData2Db(data, response) {
+  var img = new Image({url: data.url, width: data.width, height: data.height});
+  img.save(function (err) {
+    if (err) response.write("{state: 0}");
+    response.write("{state: 1}");
+    response.end();
+  });
+}
+
+function getAllImagesFromDb(response) {
+  Image.find(function (err, imgs) {
+    if (err) response.write("{state: 0}")
+    response.write(JSON.stringify(imgs));
+    // console.log(JSON.stringify(imgs));
+    response.end();
+  });
+}
+
+function imgClipedShow(response) {
+  console.log("Request handler 'start' was called.");
+  fs.readFile("./src/imgClipedShow.html", "UTF-8", function (error, file) {
+    if(error) {
+      response.writeHead(500, {"Content-Type": "text/plain"});
+      response.write(error + "\n");
+      response.end();
+    } else {
+      response.writeHead(200, {"Content-Type": "text/html"});
+      response.write(file);
+      response.end();
+    } 
+  });
+}
 
 function defaultHandler(pathname, response, request) {
   var type = pathname.slice(pathname.lastIndexOf(".")+1);
@@ -103,15 +97,16 @@ function upload(response, request) {
     console.log(byteReceived);
   });
   form.parse(request, function(error, fields, files) {
+    console.log(fields);
     var name = (new Date().valueOf()) + "" + Number.parseInt(Math.random()*10000);
-    fs.renameSync(files.upload.path, "./tmp/"+name+".png");
+    fs.renameSync(files.img.path, "./tmp/"+name+".png");
     response.writeHead(200, {"Content-Type": "text/html;charset=UTF-8"});
     if (error) {
       response.write("{state: 0}");
+      response.end();
     }else{
-      response.write("{state: 1}");
+      insertData2Db({url: "/tmp/"+name+".png", width: fields.width, height: fields.height}, response);
     }
-    response.end();
   });
 }
 function show(response) {
@@ -129,8 +124,14 @@ function show(response) {
     } 
   });
 }
+
+function getAllClipedImages(response) {
+  getAllImagesFromDb(response);
+}
+
 exports.start = start;
 exports.upload = upload;
 exports.show = show;
 exports.defaultHandler = defaultHandler;
-
+exports.getAllClipedImages = getAllClipedImages;
+exports.imgClipedShow = imgClipedShow;

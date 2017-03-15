@@ -51,13 +51,15 @@ LanceImgClipNameSpace.insertClipTargetImg = function (file) {
 };
 
 
-LanceImgClipNameSpace.uploadFiles = function (blob) {
-	//键: 当前时间戳加随机
-	fileUpload({"name": blob}, "./upload", function (request, inCallback) {
+LanceImgClipNameSpace.uploadFiles = function (blob, params) {
+	console.log(params);
+	console.log(blob);
+	// 键: 当前时间戳加随机
+	fileUpload({img: blob, width: params.width, height: params.height}, "./upload", function (request, inCallback) {
 		var responseText = request.responseText;
 		console.log(responseText);
 		inCallback(true);
-	}, {forwardName: "前往imgClipedList.com", forwardUrl: "http://www.baidu.com", isProgress: true});
+	}, {forwardName: "前往imgClipedList.com", forwardUrl: "/imgClipedShow", isProgress: true});
 }
 
 /**

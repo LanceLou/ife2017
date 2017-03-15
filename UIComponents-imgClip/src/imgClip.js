@@ -59,13 +59,18 @@ class ImgClipUtil {
 	setclipTaregtImage(clipTaregt) {
 		this.clipTaregt = clipTaregt;
 
-		var imgSrc = "";
+		var imgSrc = "",
+			that = this,
+			timer = null;
 		//背剪切图片的Image对象
 		this.clipTaregtImage = new Image();
 		imgSrc = clipTaregt.style.backgroundImage;
 		this.clipTaregtImage.src = imgSrc.slice(imgSrc.indexOf('\"')+1, imgSrc.lastIndexOf('\"'));
 
-		this.draw();
+		timer = setTimeout(function () {
+			that.draw();
+			clearTimeout(timer);
+		}, 0.5);
 	}
 
 	/**
@@ -127,7 +132,10 @@ class ImgClipUtil {
 	 * @param  {Function} callback 回调函数: 将传入的参数，canvas转化成的画布
 	 */
 	getTheCanvasBlob(callback) {
-		this.canvas.toBlob(callback);
+		var that = this;
+		this.canvas.toBlob(function (blob) {
+			callback(blob, {width: that.canvas.width, height: that.canvas.height});
+		});
 	}
 
 	/**

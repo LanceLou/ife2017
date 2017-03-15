@@ -65,69 +65,6 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	// /*
-	// 	文件读取 -》 剪切  -》  生成  -》  上传
-
-	// 	文件读取:
-	// 		拖拽或者input输入 -》 将图片输入一个img标签中
-
-	// 	事件驱动(监听):  
-
-	//  */
-
-	// var clipAndOperateAreaWrapper = document.querySelector("#lance-imgClip-operateArea");
-
-	// function initEventLis(clipUtil) {
-	// 	var clipBtn = document.querySelector("#lance-imgClip-startClip"),
-	// 		imgDom = null;
-	// 	clipBtn.addEventListener("click", function (event) {
-	// 		clipUtil.getTheCanvasBlob(function (blob) {
-	// 			if (!imgDom) {
-	// 				imgDom = document.createElement("img");
-	// 				document.querySelector("#lance-imgClip-resultContainer").appendChild(imgDom);
-	// 			}
-	// 			imgDom.src = URL.createObjectURL(blob);
-	// 		});
-	// 	});
-	// }
-
-	// function initClipContext() {
-	// 	var srcImg = document.querySelector("#lance-imgClip-srcImg"),
-	// 		clipUtilDom = document.querySelector(".clipUtil");
-	// 	clipUtilDom.style.left = "260px";
-	// 	clipUtilDom.style.top = "120px";
-	// 	srcImg.style.backgroundImage = "url(/src/imgs/test.png)";
-	// 	var mouseMove = new ElementMouseMove(document.querySelector("#lance-imgClip-oriImgWrapper"), srcImg.previousElementSibling, srcImg);
-	// 	// console.log(ImgClipUtil);
-
-	// 	var clipUtil = new ImgClipUtil(clipUtilDom, srcImg, srcImg.parentNode);
-	// 	mouseMove.addMoveListenerCallback(clipUtil.draw, clipUtil);
-
-	// 	initEventLis(clipUtil);
-	// }
-
-	// function addImage(file) {
-
-	// }
-
-	// function initFileIn() {
-
-	// 	fileOperate({dragTarget: document.querySelector("#lance-imgClip-operateArea"), selectBtn: document.querySelector("#lance-imgClip-imgIn")},
-	// 		"png|jpg|gif|jpeg",addImage, function (msg) {
-
-	// 		}
-	// 		);
-
-	// }
-
-	// function main(){
-	// 	initFileIn();
-	// 	initClipContext();
-	// }
-
-	// main();
-
-
 	var LanceImgClipNameSpace = LanceImgClipNameSpace || {};
 	LanceImgClipNameSpace.clipAndOperateAreaWrapper = document.querySelector("#lance-imgClip-operateArea");
 	LanceImgClipNameSpace.messageArea = LanceImgClipNameSpace.clipAndOperateAreaWrapper.querySelector(".remender");
@@ -173,13 +110,15 @@
 		};
 	};
 
-	LanceImgClipNameSpace.uploadFiles = function (blob) {
-		//键: 当前时间戳加随机
-		(0, _fileUpload2.default)({ "name": blob }, "./upload", function (request, inCallback) {
+	LanceImgClipNameSpace.uploadFiles = function (blob, params) {
+		console.log(params);
+		console.log(blob);
+		// 键: 当前时间戳加随机
+		(0, _fileUpload2.default)({ img: blob, width: params.width, height: params.height }, "./upload", function (request, inCallback) {
 			var responseText = request.responseText;
 			console.log(responseText);
 			inCallback(true);
-		}, { forwardName: "前往imgClipedList.com", forwardUrl: "http://www.baidu.com", isProgress: true });
+		}, { forwardName: "前往imgClipedList.com", forwardUrl: "/imgClipedShow", isProgress: true });
 	};
 
 	/**
@@ -515,18 +454,18 @@
 	/**
 	 * insertDom: 插入相关Dom，显示上传进度，上传结果等
 	 */
-	function insertDom() {
+	function insertDom(options) {
 		var container = document.createElement("div");
 		container.id = "UPC-uploadStateContainer";
 		container.className = "UPC-uploadStateContainer-hidden";
 
-		container.innerHTML = '<div class="mask"></div>' + '	<div class="stateProgress showProgress">' + '		<div class="progressWrapper">' + '			<i class="progressBar"></i>' + '		</div>' + '		<a href="javascript: void(0)" id="UPC-btn-reOperate">继续操作</a>' + '		<p id="UPC-remainder-p">上传成功</p>' + '	<a href="http://www.baidu.com" id="UPC-btn-forward">前往imgClipedList.com</a>' + '</div>';
+		container.innerHTML = '<div class="mask"></div>' + '	<div class="stateProgress showProgress">' + '		<div class="progressWrapper">' + '			<i class="progressBar"></i>' + '		</div>' + '		<a href="javascript: void(0)" id="UPC-btn-reOperate">继续操作</a>' + '		<p id="UPC-remainder-p">上传成功</p>' + '	<a href="' + options.forwardUrl + '" id="UPC-btn-forward">前往imgClipedList.com</a>' + '</div>';
 		progressWrapperCDom = container.querySelector(".stateProgress");
 		forwardDom = container.querySelector("#UPC-btn-forward");
 		reOperateDom = container.querySelector("#UPC-btn-reOperate");
 		remenderDom = container.querySelector("#UPC-remainder-p");
 
-		remenderDom.addEventListener("click", hiddenUploadDom);
+		reOperateDom.addEventListener("click", hiddenUploadDom);
 
 		document.body.appendChild(container);
 		containerDom = container;
@@ -557,11 +496,11 @@
 			var value = data[name];
 
 			if (typeof value === "function") continue;
-			formdata.append("upload", value);
+			formdata.append(name, value);
 		}
 
 		request.send(formdata);
-		if (!containerDom) insertDom();
+		if (!containerDom) insertDom(options);
 		showUploadProgressAnimate();
 	}
 
@@ -724,7 +663,9 @@
 					if (!self.isMoveDown) return;
 					var delta = self[_getMouseDeltaXY]({ x: event.clientX, y: event.clientY });
 
+					//2px为一个移动单位，"节流"
 					if (Math.abs(delta.x) <= 2 && Math.abs(delta.y) <= 2) return;
+
 					// console.log(delta);
 					self[_moveTheTarget](delta);
 
@@ -822,19 +763,36 @@
 			this[_adjustListenerCallback] = [];
 		}
 
+		/**
+	  * setclipTargetImage: 设置图片剪切被处理的对象，当有新图片被输入的时候设置
+	  * @param  {Node} clipTaregt 图片容器对象(背景)
+	  */
+
+
 		_createClass(ImgClipUtil, [{
 			key: 'setclipTaregtImage',
 			value: function setclipTaregtImage(clipTaregt) {
 				this.clipTaregt = clipTaregt;
 
-				var imgSrc = "";
+				var imgSrc = "",
+				    that = this,
+				    timer = null;
 				//背剪切图片的Image对象
 				this.clipTaregtImage = new Image();
 				imgSrc = clipTaregt.style.backgroundImage;
 				this.clipTaregtImage.src = imgSrc.slice(imgSrc.indexOf('\"') + 1, imgSrc.lastIndexOf('\"'));
 
-				this.draw();
+				timer = setTimeout(function () {
+					that.draw();
+					clearTimeout(timer);
+				}, 0.5);
 			}
+
+			/**
+	   * init: 初始化图片剪切，当有图片输入的时候，建议设置剪切对象(clipTarget)之后再调用
+	   * @param  {Node} clipTaregt 剪切对象Node
+	   */
+
 		}, {
 			key: 'init',
 			value: function init(clipTaregt) {
@@ -844,6 +802,13 @@
 					this[_isInit] = true;
 				}
 			}
+
+			/**
+	   * 绘制八向剪切框是调用，绘制其内容
+	   * @param  {[type]} error [description]
+	   * @return {[type]}       [description]
+	   */
+
 		}, {
 			key: 'draw',
 			value: function draw(error) {
@@ -855,6 +820,15 @@
 					error ? error("图片不在剪切区域！！！") : undefined;
 				}
 			}
+
+			/**
+	   * updateClipParamAndDraw: 给出参数，更新剪切工具
+	   * @param  {Number} toWidth  宽度
+	   * @param  {Number} toHeight 高度
+	   * @param  {Number} toTop    定位Top
+	   * @param  {Number} toLeft   定位Left
+	   */
+
 		}, {
 			key: 'updateClipParamAndDraw',
 			value: function updateClipParamAndDraw(toWidth, toHeight, toTop, toLeft) {
@@ -867,6 +841,13 @@
 				this[_clipUtilRect] = this.canvas.getBoundingClientRect();
 				this.draw();
 			}
+
+			/**
+	   * addClipUtilAdjustListener: 添加剪切调节回调函数
+	   * @param {Function} callback 回调函数，届时将传入当前剪切工具的长宽，定位属性(top,left)
+	   * @param {Object}   context  执行环境
+	   */
+
 		}, {
 			key: 'addClipUtilAdjustListener',
 			value: function addClipUtilAdjustListener(callback, context) {
@@ -881,8 +862,19 @@
 		}, {
 			key: 'getTheCanvasBlob',
 			value: function getTheCanvasBlob(callback) {
-				this.canvas.toBlob(callback);
+				var that = this;
+				this.canvas.toBlob(function (blob) {
+					callback(blob, { width: that.canvas.width, height: that.canvas.height });
+				});
 			}
+
+			/**
+	   * 剪切工具拖动放大移动计算
+	   * @param {String} direction 拖动方向，即拖的哪个点	
+	   * @param {Object}   startPos  鼠标起始拖动位置
+	   * @param {Object}   endPos  鼠标结束拖动位置
+	   */
+
 		}, {
 			key: _mouseDragMoveHandler,
 			value: function value(direction, startPos, endPos) {
@@ -934,6 +926,11 @@
 				this.updateClipParamAndDraw(toWidth, toHeight, toTop, toLeft);
 				this[_triggerAllClipUtilAdjustListener]({ top: toTop, left: toLeft, width: toWidth, height: toHeight });
 			}
+
+			/**
+	   * 触发所有剪切工具Rect改变监听
+	   */
+
 		}, {
 			key: _triggerAllClipUtilAdjustListener,
 			value: function value(pos) {
@@ -977,6 +974,12 @@
 					dragStartPos.y = event.clientY;
 				});
 			}
+
+			/**
+	   * 根据clipTarget与剪切工具的相对位置，长宽计算出剪切工具绘制其实坐标，长宽，剪切对象起始坐标
+	   * @return {Object} {cx，cy: 画布起始坐标 | width, hright: 绘制长宽，即两矩形重合区域 | ix, iy: 图片起始坐标，从图片的那个位置开始切}
+	   */
+
 		}, {
 			key: _getClipUtilDramParams,
 			value: function value() {
@@ -1051,6 +1054,11 @@
 					return { cx: clipTaregtRect.left - utilRect.left, cy: clipTaregtRect.top - utilRect.top, ix: 0, iy: 0, width: utilRect.right - clipTaregtRect.left, height: utilRect.bottom - clipTaregtRect.top };
 				}
 			}
+
+			/**
+	   * 最终绘制函数
+	   */
+
 		}, {
 			key: _drawClipResult,
 			value: function value(_ref) {

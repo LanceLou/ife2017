@@ -15,4 +15,6 @@ handle["/start"] = requestHandlers.start;
 handle["/upload"] = requestHandlers.upload;
 handle["/show"] = requestHandlers.show;
 handle["defaultHandler"] = requestHandlers.defaultHandler;
+handle["/getAllClipedImages"] = requestHandlers.getAllClipedImages;
+handle["/imgClipedShow"] = requestHandlers.imgClipedShow;
 server.start(router.route, handle);
