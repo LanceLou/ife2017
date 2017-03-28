@@ -38,9 +38,9 @@
 
 #### 在线学习资料
 
-* phantomjs下载与安装
-* phantomjs使用说明
-* 更多API文档
+* [phantomjs下载与安装](http://phantomjs.org/download.html)
+* [phantomjs使用说明](http://phantomjs.org/quick-start.html)
+* [更多API文档](http://phantomjs.org/api/webpage/)
 
 ## 网页抓取分析服务系列之二（设备模拟）
 

@@ -4,8 +4,8 @@
 
 1. Task-CSS3饼状loading效果 地址: [https://github.com/LanceLou/ife2017/tree/master/CSS3-pie-loading](https://github.com/LanceLou/ife2017/tree/master/CSS3-pie-loading)
 2. UI组件之图片裁剪器 地址: [https://github.com/LanceLou/ife2017/tree/master/UIComponents-imgClip](https://github.com/LanceLou/ife2017/tree/master/UIComponents-imgClip)
-3. ***unde*** 无限滚动效果 
-4. ***unde*** 仿豆瓣音乐播放器
-5. ***unde*** 封装DOM动画类库（一）
-6. ***unde*** NodeJS爬虫整合任务
-7. ***unde*** 开源JavaScript库使用统计任务
+3. ***undo*** 无限滚动效果 
+4. ***undo*** 仿豆瓣音乐播放器
+5. ***undo*** 封装DOM动画类库（一）
+6. ***undo*** NodeJS爬虫整合任务
+7. ***undo*** 开源JavaScript库使用统计任务
