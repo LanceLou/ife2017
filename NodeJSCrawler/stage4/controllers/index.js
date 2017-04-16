@@ -1,0 +1,1 @@
+exports.CrawledData = require('./crawledData')

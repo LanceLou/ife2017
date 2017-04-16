@@ -41,7 +41,7 @@ page.open('https://www.baidu.com/s?wd=' + encodeURIComponent(keyword), function(
        	dataList: []
    	};
   	page.evaluate(function() {
-	  	var list = document.querySelectorAll(".result.c-container"),
+	  	var list = document.querySelectorAll(".c-container"),
 	  		listItem = null,
 	  		tempStrObj = [];
 	  	for (var i = 0; i < list.length; i++) {
@@ -49,8 +49,8 @@ page.open('https://www.baidu.com/s?wd=' + encodeURIComponent(keyword), function(
 		   		listItem = {};
 		   		listItem.title = list[i].querySelector("h3").textContent;
 		   		listItem.info = list[i].querySelector(".c-abstract").textContent;
-		   		listItem.link = list[i].querySelector(".c-showurl").href;
-		   		listItem.pic = list[i].querySelector(".general_image_pic img").src;
+		   		listItem.link = list[i].querySelector("h3 > a:first-child").href;
+		   		listItem.pic = list[i].querySelector("img") ? list[i].querySelector("img").src : "";
 		   	}catch(e){
 		   		continue;
 		   	}
@@ -58,10 +58,14 @@ page.open('https://www.baidu.com/s?wd=' + encodeURIComponent(keyword), function(
    		}
 	  	console.log(JSON.stringify(tempStrObj));
   	});
+  	page.render('example.png');
   }
   phantom.exit();
 });
 
+
+
+//----------------------------------------------------------------------------------
 
 //计时
 /*
