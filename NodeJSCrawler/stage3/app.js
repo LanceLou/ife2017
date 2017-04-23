@@ -73,7 +73,7 @@ var server = app.listen(8000, function() {
 function generateResult(list) {
 	console.log(list);
 	data.dataList = list;
-   	console.log(JSON.stringify(data));
+  console.log(JSON.stringify(data));
 }
 
 function pageEvaluate() {

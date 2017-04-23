@@ -22,46 +22,73 @@
 
  */
 
+const bodyParser = require('body-parser'),
+	express = require('express'),
+  Cookie = require('cookie'),
+  session = require('express-session'),
+  cookieParser = require('cookie-parser'),
+	phantom = require('phantom'),
+	path = require('path'),
+	socketApi = require('./controllers/socketApi');
+
+// 用于将Session存入mongodb中
+var MongoStore = require('connect-mongo')(session)
+var sessionStore = new MongoStore({
+  url: 'mongodb://localhost/crawlerStage5'
+})
+
+var app = express();
 
 
-const async = require('async');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+app.use(cookieParser())
+app.use(session({
+  secret: 'technode', //加密签名
+  cookie:{
+    maxAge: 60 * 1000
+  },
+  ttl: 14 * 24 * 60 * 60,
+  store: sessionStore,
+  resave: true, //resave : 是指每次请求都重新设置session cookie，假设你的cookie是10分钟过期，每次请求都会再设置10分钟
+  saveUninitialized: true //是指无论有没有session cookie，每次请求都设置个session cookie ，默认给个标示为 connect.sid
+}))
 
-// create a queue object with concurrency 2
-var q = async.queue(function(task, callback) {
-    //在此处发起异步，在异步完成之后调用callback
-    //------------------------------------------------------------------------------------------
-    console.log('发起'+ task.name + '的异步' );
-    setTimeout(function () {
-    	console.log(task.name + '的异步完成' );
-    	callback();
-    },1000);
-}, 2);
-
-// assign a callback
-q.drain = function() {
-    console.log('all items have been processed');
-};
-
-// add some items to the queue
-q.push({name: 'foo'}, function(err) {
-    console.log('finished processing foo');
+app.get('/spider', function (req, res) {
+	
+  console.log(req.ip);
 });
-q.push({name: 'bar'}, function (err) {
-    console.log('finished processing bar');
+
+app.set('staticPath', '/static');
+
+app.use(express.static(__dirname + app.get('staticPath')));
+
+var server = app.listen(8000, function() {
+  console.log('ready')
 });
 
-// add some items to the queue (batch-wise)
-q.push([{name: 'baz'},{name: 'bay'},{name: 'bax'}], function(err) {
-    console.log('finished processing item');
+
+var io = require('socket.io').listen(server);
+
+io.set('authorization', function(handshakeData, accept) {
+  var cookies = Cookie.parse(handshakeData.headers.cookie),
+    connectSid = cookies['connect.sid'];
+  if (connectSid) {
+    accept(null, true);
+
+  }else
+    accept('resused');
 });
 
-// add some items to the front of the queue
-q.unshift({name: 'bar'}, function (err) {
-    console.log('finished processing bar');
-});
+io.sockets.on('connection', function(socket) {
+  socketApi.connect(socket);
 
-setTimeout(function () {
-	q.unshift({name: 'lalala-lancelou'}, function (err) {
-    console.log('finished processing bar lalala-lancelou');
-	});
-}, 10000);
+  socket.on('disconnect', function() {
+    socketApi.disconnect(socket)
+  });
+
+  //ready for implement
+  socket.on('spider', function (data, cb) {
+    socketApi.spiderRequest(data, cb, socket);
+  });
+});

@@ -57,20 +57,22 @@
 </head>
 <body>
 	<div class="container">
-		<label for="search-wd">抓取关键词: </label><input type="text" name="search-wd">
-		<label for="search-pageNum">抓取页数: </label><input type="text" name="search-pageNum">
-		<label for="search-mediaType">设备类型: </label>
-		<select name="search-mediaType" id="search-mediaType">
-			<option name='iphone5'>iphone5</option>
-			<option name='iphone6'>iphone6</option>
-			<option name='ipad'>ipad</option>
-		</select>
-		<input type="button" value="提交" id="submit-btn">
+		<form action="#" id="spider-submit-form">
+			<label for="search_wd">抓取关键词: </label><input type="text" name="search_wd">
+			<label for="search_pageNum">抓取页数: </label><input type="text" name="search_pageNum">
+			<label for="search_mediaType">设备类型: </label>
+			<select name="search_mediaType">
+				<option name='iphone5'>iphone5</option>
+				<option name='iphone6'>iphone6</option>
+				<option name='ipad'>ipad</option>
+			</select>
+			<input type="submit" value="提交">
+		</form>
 	</div>
 
 	<div class="showContainer">
 		<h2>抓取结果</h2>
-		<h5 id="resultShow"><span>关键词: </span><span>搜索用时: </span><span>当前完成进度: </span></h5>
+		<h5 id="resultShow"><span>关键词: </span><span id="search-time">搜索用时: </span><span>当前完成进度: </span></h5>
 		<table>
 			<thead>
 				<tr>
@@ -85,64 +87,6 @@
 			</tbody>
 		</table>
 	</div>
-	<script type="text/javascript">
-		var showInfos = document.querySelector('#resultShow').querySelectorAll('span'),
-			resultC = document.querySelector('#searchResult');
-		function renderResult(responseText) {
-			var data = JSON.parse(responseText),
-				tr = null,
-				td = null,
-				item = null,
-				fragment = document.createDocumentFragment();
-
-			showInfos[0].innerHTML = '关键词: ' + data.word;
-			showInfos[1].innerHTML = '搜索用时: ' + data.time;
-
-			for (var i = 0; i < data.dataList.length; i++) {
-				item = data.dataList[i];
-				tr = document.createElement('tr');
-				td = document.createElement('td');
-				td.innerHTML = '<p title='+item.title+'>' + item.title + '</p>';
-				tr.appendChild(td);
-				td = document.createElement('td');
-				td.innerHTML = '<p title='+item.info+'>' + item.info + '</p>';
-				tr.appendChild(td);
-				td = document.createElement('td');
-				td.innerHTML = '<a href="'+item.link+'">'+item.link+'</a>';
-				tr.appendChild(td);
-				td = document.createElement('td');
-				td.innerHTML = item.pic === 'no picture' ? 'none' : '<img src="'+item.pic+'" alt="pic" />';
-				tr.appendChild(td);
-				fragment.append(tr);
-			}
-
-			resultC.appendChild(fragment);
-
-		}
-		
-		function queryResult(key) {
-			var request = new XMLHttpRequest();
-			request.open('POST', '/scrawler');
-			request.onreadystatechange = function () {
-				if (request.readyState === 4 && request.status === 200) {
-					renderResult(request.responseText);
-				}
-			}
-			request.setRequestHeader("Content-Type", 'application/json');
-			var formData = new FormData();
-			formData.append('wd', key);
-			// formData.append('swd', 'opslcs');
-			request.send(JSON.stringify({ss: 'cc', ww: 'the f line \r\n the s line', wd: "key worf"}));
-		}		
-
-		function init() {
-			var value;
-			document.querySelector('#submit-btn').addEventListener('click', function () {
-				value = this.previousElementSibling.value;
-				if (value && value.trim() !== '') queryResult(value);
-			});
-		}
-		init();
-	</script>
+	<script type='text/javascript' src='./build/bundle.js'></script>
 </body>
 </html>
